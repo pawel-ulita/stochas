@@ -199,14 +199,9 @@ SettingsTab::SettingsTab(SeqGlob * glob, int id, CptNotify *notify) :
    mTglLowestMidiOctave.addItem(0, "0", false);
    addAndMakeVisible(mTglLowestMidiOctave);
 
-   
-   mNumDefaultMonoProb.setSpec(0,3,1,0,"");
-   mNumDefaultMonoProb.setStringRep(0, SEQ_PROB_NEVER_TEXT);
-   mNumDefaultMonoProb.setStringRep(1, SEQ_PROB_LOW_TEXT);
-   mNumDefaultMonoProb.setStringRep(2, SEQ_PROB_MED_TEXT);
-   mNumDefaultMonoProb.setStringRep(3, SEQ_PROB_HIGH_TEXT);
-   
 
+   mNumDefaultMonoProb.setSpec(SEQ_PROB_NEVER, SEQ_PROB_ON, 1, 0, "%");
+   mNumDefaultMonoProb.setStringRep(SEQ_PROB_ON, SEQ_PROB_ON_TEXT);
    addAndMakeVisible(mNumDefaultMonoProb);
 
    mNumDefaultPolyProb.setSpec(SEQ_PROB_NEVER, SEQ_PROB_ON, 1, 0, "%");
@@ -256,18 +251,7 @@ void SettingsTab::refreshAll()
    else
       mTglShiftReversed.setCurrentItem(0, true, false);
 
-   // mono
-   x = em.getDefaultProbability(true);
-   if(x <= SEQ_PROB_NEVER)
-      mNumDefaultMonoProb.setValue(0, false);
-   else if (x <= SEQ_PROB_LOW_VAL)
-      mNumDefaultMonoProb.setValue(1, false);
-   else if (x <= SEQ_PROB_MED_VAL)
-      mNumDefaultMonoProb.setValue(2, false);
-   else 
-      mNumDefaultMonoProb.setValue(3, false);
-   
-   // poly
+   mNumDefaultMonoProb.setValue(em.getDefaultProbability(true), false);
    mNumDefaultPolyProb.setValue(em.getDefaultProbability(false), false);
    mNumDefaultVelo.setValue(em.getDefaultVelocity(), false);
 
@@ -298,17 +282,8 @@ void SettingsTab::cptValueChange(int cptId, int value)
       em.setMouseSense(SEQ_MOUSE_SENSE_MAX - (value - 1));
       break;
    case SEQCTL_SET_DEFMONO:
-   {
-      int8_t x=0;
-      switch (value) {
-      case 0: x = SEQ_PROB_NEVER; break;
-      case 1: x = SEQ_PROB_LOW_VAL; break;
-      case 2: x = SEQ_PROB_MED_VAL; break;
-      case 3: default: x = SEQ_PROB_HIGH_VAL; break;      
-      }
-      em.setDefaultProbability(x, true);
+      em.setDefaultProbability((int8_t)value, true);
       break;
-   }
    case SEQCTL_SET_DEFPOLY:
       em.setDefaultProbability((int8_t)value, false);
       break;
