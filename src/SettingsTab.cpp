@@ -130,6 +130,13 @@ void SettingsTab::resized()
    top.removeFromLeft(space);
    mTglMidiNoteNumber.setBounds(top);
 
+   // mono relative prob
+   top = b3.removeFromTop(vspace);
+   left = top.removeFromLeft(tab);
+   mLblMonoRelativeProb.setBounds(left);
+   top.removeFromLeft(space);
+   mTglMonoRelativeProb.setBounds(top);
+
 
    // version
    top = b3.removeFromBottom(vspace);
@@ -164,7 +171,8 @@ SettingsTab::SettingsTab(SeqGlob * glob, int id, CptNotify *notify) :
    mNumPosOffset(glob, SEQCTL_SET_POSOFFSET, this, "setPosOffset"),
    mNumUIScale(glob, SEQCTL_SET_UISCALE, this, "setUIScale"),
    mTglPatLayerLink(glob, SEQCTL_SET_PATLAYERLINK, this, "patLayerLink"),
-   mTglMidiNoteNumber(glob,SEQCTL_SET_MIDINOTENUM, this, "showMidiNum")
+   mTglMidiNoteNumber(glob,SEQCTL_SET_MIDINOTENUM, this, "showMidiNum"),
+   mTglMonoRelativeProb(glob, SEQCTL_SET_MONORELPROB, this, "monoRelProb")
 {
    setupLabel(mLblMouseSense,"Mouse Sensitivity");
    setupLabel(mLblRightMouseAction,"Right Click");
@@ -178,6 +186,7 @@ SettingsTab::SettingsTab(SeqGlob * glob, int id, CptNotify *notify) :
    setupLabel(mLblUIScale, "UI Scale");
    setupLabel(mLblUseMidiNum, "MIDI Note Numbers");
    setupLabel(mLblPatLayerLink, "Pat./Layer linked");
+   setupLabel(mLblMonoRelativeProb, "Mono Rel. Prob.");
    String vs = String("Version: ");
    vs += Stochas::Build::FullVersionStr;
    setupLabel(mLblVersionBuild, vs);
@@ -230,6 +239,10 @@ SettingsTab::SettingsTab(SeqGlob * glob, int id, CptNotify *notify) :
    mTglMidiNoteNumber.addItem(1, "On", false);
    addAndMakeVisible(mTglMidiNoteNumber);
    
+   mTglMonoRelativeProb.addItem(0, "Off", true);
+   mTglMonoRelativeProb.addItem(1, "On", false);
+   addAndMakeVisible(mTglMonoRelativeProb);
+   
 }
 
 // called when the tab becomes visible (user clicked on the tab)
@@ -270,6 +283,11 @@ void SettingsTab::refreshAll()
    else
      mTglMidiNoteNumber.setCurrentItem(0,true,false);
 
+   if(em.isMonoRelativeProb())
+     mTglMonoRelativeProb.setCurrentItem(1, true, false);
+   else
+     mTglMonoRelativeProb.setCurrentItem(0,true,false);
+
 
 }
 
@@ -307,6 +325,10 @@ void SettingsTab::cptValueChange(int cptId, int value)
       break;
    case SEQCTL_SET_MIDINOTENUM:
       em.setShowMidiNumbers(value==1);
+      break;
+   case SEQCTL_SET_MONORELPROB:
+      em.setMonoRelativeProb(value==1);
+      break;
    case SEQCTL_SET_POSOFFSET:
       em.setPPQOffset(value);
       break;

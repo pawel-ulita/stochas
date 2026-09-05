@@ -154,12 +154,35 @@ StepCpt::getEffectiveColorAndText(juce::Colour &c, juce::String &txt, bool &dash
          else if (val <= SEQ_PROB_ON)
             c = e->getColorFor(EditorState::stepHighProb);
 
-         if (val != SEQ_PROB_OFF) {
+         if (val != SEQ_PROB_OFF && d->isMonoMode() && e->isMonoRelativeProb()) {
+            // Calculate relative percentage of this note's weight vs total weight in column
+            int totalWeight = 0;
+            int numRows = d->getMaxRows();
+            int startRow = SEQ_MAX_ROWS - numRows;
+
+            for (int r = startRow; r < SEQ_MAX_ROWS; r++) {
+               int8_t rowProb;
+               // Use mTempValue for the cell being dragged
+               if (r == mRow && mTempValue != MOUSE_STARTVAL_INVALID)
+                  rowProb = mTempValue;
+               else
+                  rowProb = d->getProb(r, mCol);
+
+               if (rowProb > 0) // Only count active notes (not OFF or NEVER)
+                  totalWeight += rowProb;
+            }
+
+            if (totalWeight > 0) {
+               int percentage = (val * 100) / totalWeight;
+               txt = String().formatted("%d%%", percentage);
+            }
+         }
+         else if (val != SEQ_PROB_OFF) {
             if (val == SEQ_PROB_ON)
                txt = SEQ_PROB_ON_TEXT;
             else
                txt = String().formatted("%d%%",val);
-         }
+            }
 
          if(mode==EditorState::editingChain) {
             if(val != SEQ_PROB_OFF) {
