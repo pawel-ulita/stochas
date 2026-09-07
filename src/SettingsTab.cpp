@@ -69,7 +69,15 @@ void SettingsTab::resized()
    top.removeFromLeft(space);
    mNumDefaultPolyProb.setBounds(top);
    b1.removeFromTop(vgap);
-   
+
+   // mono relative prob
+   top = b1.removeFromTop(vspace);
+   left = top.removeFromLeft(tab);
+   mLblMonoRelativeProb.setBounds(left);
+   top.removeFromLeft(space);
+   mTglMonoRelativeProb.setBounds(top);
+   b1.removeFromTop(vgap);
+
    // def velo
    top = b2.removeFromTop(vspace);
    left = top.removeFromLeft(tab);
@@ -129,13 +137,6 @@ void SettingsTab::resized()
    mLblUseMidiNum.setBounds(left);
    top.removeFromLeft(space);
    mTglMidiNoteNumber.setBounds(top);
-
-   // mono relative prob
-   top = b3.removeFromTop(vspace);
-   left = top.removeFromLeft(tab);
-   mLblMonoRelativeProb.setBounds(left);
-   top.removeFromLeft(space);
-   mTglMonoRelativeProb.setBounds(top);
 
 
    // version
