@@ -181,7 +181,7 @@ StepCpt::getEffectiveColorAndText(juce::Colour &c, juce::String &txt, bool &dash
             if (val == SEQ_PROB_ON)
                txt = SEQ_PROB_ON_TEXT;
             else
-               txt = String().formatted("%d%%",val);
+               txt = String().formatted("%0.2f", val / 100.0);
             }
 
          if(mode==EditorState::editingChain) {
