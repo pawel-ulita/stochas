@@ -177,12 +177,18 @@ StepCpt::getEffectiveColorAndText(juce::Colour &c, juce::String &txt, bool &dash
                txt = String().formatted("%d%%", percentage);
             }
          }
-         else if (val != SEQ_PROB_OFF) {
+         else if (val != SEQ_PROB_OFF and d->isMonoMode()) {
             if (val == SEQ_PROB_ON)
                txt = SEQ_PROB_ON_TEXT;
             else
                txt = String().formatted("%0.2f", val / 100.0);
-            }
+         }
+         else if (val != SEQ_PROB_OFF and !d->isMonoMode()) {
+            if (val == SEQ_PROB_ON)
+               txt = SEQ_PROB_ON_TEXT;
+            else
+               txt = String().formatted("%d%%", val);
+         }
 
          if(mode==EditorState::editingChain) {
             if(val != SEQ_PROB_OFF) {
