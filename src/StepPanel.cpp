@@ -173,8 +173,19 @@ StepCpt::getEffectiveColorAndText(juce::Colour &c, juce::String &txt, bool &dash
                      totalWeight += rowProb;
                }
 
-               if (totalWeight > 0)
-                  txt = String().formatted("%d%%", (val * 100) / totalWeight);
+               if (totalWeight > 0) {
+                  auto relativePercentage = (val * 100) / totalWeight;
+                  txt = String().formatted("%d%%", relativePercentage);
+
+                  if(relativePercentage==SEQ_PROB_NEVER)
+                     c = e->getColorFor(EditorState::stepNeverProb);
+                  else if (relativePercentage <= SEQ_PROB_LOW_VAL)
+                     c = e->getColorFor(EditorState::stepLowProb);
+                  else if (relativePercentage <= SEQ_PROB_MED_VAL)
+                     c = e->getColorFor(EditorState::stepMediumProb);
+                  else if (relativePercentage <= SEQ_PROB_ON)
+                     c = e->getColorFor(EditorState::stepHighProb);
+               }
             }
             else {
                if (val == SEQ_PROB_ON)
