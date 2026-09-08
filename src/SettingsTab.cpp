@@ -187,7 +187,7 @@ SettingsTab::SettingsTab(SeqGlob * glob, int id, CptNotify *notify) :
    setupLabel(mLblUIScale, "UI Scale");
    setupLabel(mLblUseMidiNum, "MIDI Note Numbers");
    setupLabel(mLblPatLayerLink, "Pat./Layer linked");
-   setupLabel(mLblMonoRelativeProb, "Mono Rel. Prob.");
+   setupLabel(mLblMonoRelativeProb, "Mono Label");
    String vs = String("Version: ");
    vs += Stochas::Build::FullVersionStr;
    setupLabel(mLblVersionBuild, vs);
@@ -240,8 +240,8 @@ SettingsTab::SettingsTab(SeqGlob * glob, int id, CptNotify *notify) :
    mTglMidiNoteNumber.addItem(1, "On", false);
    addAndMakeVisible(mTglMidiNoteNumber);
    
-   mTglMonoRelativeProb.addItem(0, "Off", true);
-   mTglMonoRelativeProb.addItem(1, "On", false);
+   mTglMonoRelativeProb.addItem(0, "Weight", true);
+   mTglMonoRelativeProb.addItem(1, "Rel. Prob.", false);
    addAndMakeVisible(mTglMonoRelativeProb);
    
 }
