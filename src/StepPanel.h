@@ -133,6 +133,10 @@ class StepPanel : public Component, public KeyListener {
    // will be -99 if nothings going on
    int8_t mMouseStartVal;
 
+   // true once a drag has exceeded the click threshold (axis determined) even
+   // if the clamped value ends up equal to mMouseStartVal
+   bool mDidDrag;
+
    // keep track of starting item for chain drag
    StepCpt *mChainStartItem;
    StepCpt *mChainEndItem;
