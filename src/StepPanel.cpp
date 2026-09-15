@@ -312,6 +312,7 @@ StepPanel::StepPanel(SeqGlob *glob, int id, Component *mainCpt, CptNotify *notif
    mCurLayer(0), // first layer
    mAxis(unknown),
    mMouseStartVal(MOUSE_STARTVAL_INVALID),
+   mDidDrag(false),
    mChainStartItem(0),
    mChainEndItem(0),
    mChainNegTgt(false),
@@ -510,6 +511,7 @@ StepPanel::mouseDrag(const MouseEvent &event)
                   mAxis = horizontal;
                else
                   mAxis = vertical;
+               mDidDrag = true;
             }
 
             int newval = -1;
@@ -801,8 +803,10 @@ void StepPanel::mouseUp(const MouseEvent & event)
       if (mMouseStartVal != MOUSE_STARTVAL_INVALID &&
          e->getNumSelectedCells() < 2) { // if we are interacting with a valid cell
 
-         // if a drag has occurred where a value actually changed
-         if (c->mTempValue != MOUSE_STARTVAL_INVALID && c->mTempValue != mMouseStartVal) {
+         // A drag produced a value. mDidDrag means the pointer crossed the click threshold, and
+         // mTempValue was written during the drag. Commit it even when clamping leaves it equal to
+         // mMouseStartVal, so a boundary drag isn't mistaken for a click and doesn't cycle the value.
+         if (mDidDrag && c->mTempValue != MOUSE_STARTVAL_INVALID) {
             // a drag has occurred, tempvalue will hold the new value
             auto em = e->getEditMode();
             if (em == EditorState::editingVelocity) {
@@ -826,7 +830,7 @@ void StepPanel::mouseUp(const MouseEvent & event)
                }
             }
          }
-         else {
+         else if (!mDidDrag) { // a real click (no drag gesture) - cycle values
             auto em = e->getEditMode();
             if (rightMouse) {
                // if it's a right click (not a drag which is handled above)
@@ -950,6 +954,7 @@ void StepPanel::mouseUp(const MouseEvent & event)
          
       c->mTempValue = MOUSE_STARTVAL_INVALID;
       mMouseStartVal = MOUSE_STARTVAL_INVALID;
+      mDidDrag = false;
 
       repaint();
 
