@@ -25,7 +25,7 @@ public:
    int mRow;
    int mCol;
    SeqGlob *mGlob;
-   // if we are in the act of dragging, this will hold the temporary value (otherwise -1)
+   // if we are in the act of dragging, this will hold the temporary value (otherwise -99, i.e. MOUSE_STARTVAL_INVALID)
    int8_t mTempValue;
    StepCpt();
    void paint(Graphics &g) override;
