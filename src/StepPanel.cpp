@@ -525,32 +525,31 @@ StepPanel::mouseDrag(const MouseEvent &event)
             else // right = positive
                mouseDist = event.getDistanceFromDragStartX() / (e->getMouseSense());
 
-            if (mouseDist) {
-               if (e->getEditMode() == EditorState::editingVelocity) {
-                  // clamp to 127
-                  newval = mMouseStartVal + mouseDist;
-                  newval = newval > 127 ? 127 : newval < 0 ? 0 : newval;
-               }
-               else if (e->getEditMode() == EditorState::editingOffset) {
-                  // clamp to -50 to +50
-                  newval = mMouseStartVal + mouseDist;
-                  newval = newval > 50 ? 50 : newval < -50 ? -50 : newval;
-               } else if (e->getEditMode() == EditorState::editingTriggers) {
-                 // clamp to 1 to max triggers
-                 newval = mMouseStartVal + mouseDist;
-                 newval = newval > SEQ_MAX_RETRIGGER ? SEQ_MAX_RETRIGGER : newval < 1 ? 1 : newval;
-               }
-               else {
-                  // both mono and poly mode: clamp to 0-100 (or -1 for OFF)
-                  newval = mMouseStartVal + mouseDist;
-                  newval = newval > SEQ_PROB_ON ? SEQ_PROB_ON :
-                     newval < SEQ_PROB_OFF ? SEQ_PROB_OFF : newval;
-               }
+            if (e->getEditMode() == EditorState::editingVelocity) {
+               // clamp to 127
+               newval = mMouseStartVal + mouseDist;
+               newval = newval > 127 ? 127 : newval < 0 ? 0 : newval;
+            }
+            else if (e->getEditMode() == EditorState::editingOffset) {
+               // clamp to -50 to +50
+               newval = mMouseStartVal + mouseDist;
+               newval = newval > 50 ? 50 : newval < -50 ? -50 : newval;
+            } else if (e->getEditMode() == EditorState::editingTriggers) {
+              // clamp to 1 to max triggers
+              newval = mMouseStartVal + mouseDist;
+              newval = newval > SEQ_MAX_RETRIGGER ? SEQ_MAX_RETRIGGER : newval < 1 ? 1 : newval;
+            }
+            else {
+               // both mono and poly mode: clamp to 0-100 (or -1 for OFF)
+               newval = mMouseStartVal + mouseDist;
+               newval = newval > SEQ_PROB_ON ? SEQ_PROB_ON :
+                  newval < SEQ_PROB_OFF ? SEQ_PROB_OFF : newval;
+            }
 
-               // write to a temporary value on the step itself. This will be written to seq on mouseUp
-               // also used during paint
-               c->mTempValue = (int8_t)newval;
-            } 
+            // write to a temporary value on the step itself. This will be written to seq on mouseUp
+            // also used during paint
+            c->mTempValue = (int8_t)newval;
+
             repaint();
          } else {
             // mouse start val == INVALID
